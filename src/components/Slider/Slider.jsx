@@ -1,40 +1,43 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import SliderContent from "../SliderContent/SliderContent";
-import Dots from "../Dots/Dots";
-import Arrows from "../Arrows/Arrows";
-import sliderImage from "../sliderImage/sliderImage";
+const images = [
+  { src: "https://placehold.jp/600x400.png", legend: "Зображення 1" },
+  { src: "https://placehold.jp/600x400.png", legend: "Зображення 2" },
+  { src: "https://placehold.jp/600x400.png", legend: "Зображення 3" },
+  { src: "https://placehold.jp/600x400.png", legend: "Зображення 4" },
+  { src: "https://placehold.jp/600x400.png", legend: "Зображення 5" },
+];
 
-const len = sliderImage.length - 1;
+const Slider = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-function Slider(props) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const nextSlide = () => {
+    setCurrentIndex((currentIndex + 1) % images.length);
+  };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex(activeIndex === len ? 0 : activeIndex + 1);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [activeIndex]);
+  const prevSlide = () => {
+    setCurrentIndex((currentIndex - 1 + images.length) % images.length);
+  };
 
   return (
-    <div className="slider-container">
-      <SliderContent activeIndex={activeIndex} sliderImage={sliderImage} />
-      <Arrows
-        prevSlide={() =>
-          setActiveIndex(activeIndex < 1 ? len : activeIndex - 1)
-        }
-        nextSlide={() =>
-          setActiveIndex(activeIndex === len ? 0 : activeIndex + 1)
-        }
-      />
-      <Dots
-        activeIndex={activeIndex}
-        sliderImage={sliderImage}
-        onclick={(activeIndex) => setActiveIndex(activeIndex)}
-      />
+    <div className="carousel">
+      <button onClick={prevSlide} className="carousel-button">
+        Попереднє
+      </button>
+      <div className="carousel-slide">
+        <div>
+          <img
+            src={images[currentIndex].src}
+            alt={images[currentIndex].legend}
+          />
+          <p>{images[currentIndex].legend}</p>
+        </div>
+      </div>
+      <button onClick={nextSlide} className="carousel-button">
+        Наступне
+      </button>
     </div>
   );
-}
+};
 
 export default Slider;
